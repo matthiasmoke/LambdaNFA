@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 /**
- *
+ * Main class that runs a shell for UI
  */
 public class Shell {
 

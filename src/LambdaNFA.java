@@ -1,7 +1,19 @@
 /**
- *
+ * oRepresents an NFA
  */
-public class NFAutomat implements Automaton {
+public class LambdaNFA implements Automaton {
+
+    private static int STATES;
+    private static final int START_STATE = 1;
+
+    /**
+     * Initializes an NFA
+     * @param numberOfStates maximum states NFA can have
+     */
+    public LambdaNFA(int numberOfStates) {
+        STATES = numberOfStates;
+    }
+
     @Override
     public boolean isValidTransition(int source, int target, char symbol) {
         return false;
