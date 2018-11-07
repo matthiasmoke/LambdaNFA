@@ -6,17 +6,27 @@ import java.util.Collection;
  */
 public class Transition implements Comparable<Transition>{
 
-    private Collection<State> pointsTo = new ArrayList<>();
-
+    private State statePointer;
+    private char character;
 
     /**
      *
      */
-    public Transition() {
-
+    public Transition(char character, State state) {
+        this.character = character;
+        this.statePointer = state;
     }
     @Override
     public int compareTo(Transition o) {
         return 0;
     }
+
+    public char getCharacter() {
+        return this.character;
+    }
+
+    public State getStatePointer() {
+        return statePointer;
+    }
+
 }

@@ -1,10 +1,10 @@
 /**
- * oRepresents an NFA
+ * Represents an NFA
  */
 public class LambdaNFA implements Automaton {
 
-    private static int STATES;
     private static final int START_STATE = 1;
+    private static int STATES;
 
     /**
      * Initializes an NFA
