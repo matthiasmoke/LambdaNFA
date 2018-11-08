@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
  * Represents a transition between to states of an NFA
  */
@@ -18,7 +15,7 @@ public class Transition implements Comparable<Transition>{
     }
 
     /**
-     *
+     * Compares two transition objects
      */
     @Override
     public int compareTo(Transition o) {

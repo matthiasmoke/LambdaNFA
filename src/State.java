@@ -8,12 +8,11 @@ public class State {
     private int stateNumber;
     private static final int ALPHABET_NUMBER = 26;
 
-    private List<Collection<Transition>> charAdj
-            = new ArrayList<Collection<Transition>>(ALPHABET_NUMBER + 1);
+    private List<Collection<Transition>> charAdj;
 
     /**
-     * Initializes a State
-     * @param number
+     * Creates an instance of state with given parameters
+     * @param number number of state
      * @param transition
      */
     public State(int number, Transition transition) {
@@ -22,11 +21,13 @@ public class State {
     }
 
     /**
-     *
-     * @param number
+     * Creates an instance of state with given parameters
+     * @param number number of state
      */
     public State(int number) {
         this.stateNumber = number;
+        this.charAdj = new ArrayList<>(ALPHABET_NUMBER + 1);
+        initTransitionList();
     }
 
     /**
@@ -87,5 +88,11 @@ public class State {
         }
 
         return (int) c - (int) 'a';
+    }
+
+    private void initTransitionList() {
+        for (int i = 0; i < ALPHABET_NUMBER + 1; i++) {
+            charAdj.add(i, null);
+        }
     }
 }

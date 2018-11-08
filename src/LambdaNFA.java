@@ -23,7 +23,7 @@ public class LambdaNFA implements Automaton {
 
     @Override
     public void addTransition(int source, int target, char symbol) {
-        states[source].addTransition(new Transition(symbol, states[target]));
+        states[source - 1].addTransition(new Transition(symbol, states[target - 1]));
     }
 
     @Override

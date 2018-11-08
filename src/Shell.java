@@ -24,7 +24,7 @@ public class Shell {
         run = true;
 
         while (run) {
-            System.out.println("nfa> ");
+            System.out.print("nfa> ");
             String input = reader.readLine();
 
             if (input != null) {
@@ -36,10 +36,10 @@ public class Shell {
     private static void evalInput(String input) {
 
         Scanner sc = new Scanner(input);
-        String userCommand = sc.next();
-        switch (userCommand.charAt(0)) {
+        String command = sc.next();
+        switch (command.charAt(0)) {
             case 'i':
-                if (userCommand.equals(commands[0])) {
+                if (command.equals(commands[0]) || command.length() == 1) {
                     if (sc.hasNextInt()) {
                         automat = new LambdaNFA(sc.nextInt());
                     }
@@ -47,7 +47,7 @@ public class Shell {
                 break;
 
             case 'a':
-                if (userCommand.equals(commands[1])) {
+                if (command.equals(commands[1]) || command.length() == 1) {
                     int j = 0;
                     int i = 0;
                     char c = 0;
@@ -66,32 +66,32 @@ public class Shell {
                 break;
 
             case 'c':
-                if (userCommand.equals(commands[2])) {
+                if (command.equals(commands[2]) || command.length() == 1) {
 
                 }
                 break;
 
             case 'p':
-                if (userCommand.equals(commands[3])) {
+                if (command.equals(commands[3]) || command.length() == 1) {
 
                 }
                 break;
 
             case 'g':
-                if (userCommand.equals(commands[4])) {
+                if (command.equals(commands[4]) || command.length() == 1) {
 
                 }
                 break;
 
             case 'h':
-                if (userCommand.equals(commands[5])) {
+                if (command.equals(commands[5]) || command.length() == 1) {
                     printHelpInfo();
                 }
                 break;
 
             case 'q':
-                if (userCommand.equals(commands[6])) {
-
+                if (command.equals(commands[6]) || command.length() == 1) {
+                    run = false;
                 }
                 break;
 
