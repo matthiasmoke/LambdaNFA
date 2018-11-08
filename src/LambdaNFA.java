@@ -4,14 +4,16 @@
 public class LambdaNFA implements Automaton {
 
     private static final int START_STATE = 1;
-    private static int STATES;
+    private static State[] states;
+
 
     /**
      * Initializes an NFA
      * @param numberOfStates maximum states NFA can have
      */
     public LambdaNFA(int numberOfStates) {
-        STATES = numberOfStates;
+        states = new State[numberOfStates];
+        initStates();
     }
 
     @Override
@@ -21,7 +23,7 @@ public class LambdaNFA implements Automaton {
 
     @Override
     public void addTransition(int source, int target, char symbol) {
-
+        states[source].addTransition(new Transition(symbol, states[target]));
     }
 
     @Override
@@ -32,5 +34,17 @@ public class LambdaNFA implements Automaton {
     @Override
     public String longestPrefix(String word) {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "";
+    }
+
+    private void initStates() {
+        for (int i = 0; i < states.length; i++) {
+            states[i] = new State(START_STATE + i);
+
+        }
     }
 }

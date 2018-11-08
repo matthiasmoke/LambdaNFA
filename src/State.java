@@ -5,10 +5,11 @@ import java.util.*;
  */
 public class State {
 
-    private List<Collection<Transition>> charAdj
-            = new ArrayList<Collection<Transition>>();
     private int stateNumber;
     private static final int ALPHABET_NUMBER = 26;
+
+    private List<Collection<Transition>> charAdj
+            = new ArrayList<Collection<Transition>>(ALPHABET_NUMBER + 1);
 
     /**
      * Initializes a State
@@ -55,7 +56,6 @@ public class State {
         for(Transition t : charAdj.get(index)) {
             states.add(t.getStatePointer());
         }
-
         return states;
     }
 
@@ -70,6 +70,10 @@ public class State {
         }
         Collections.sort(adj);
         return adj;
+    }
+
+    public int getNumber() {
+        return stateNumber;
     }
 
     /**

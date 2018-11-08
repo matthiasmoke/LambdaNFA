@@ -16,9 +16,22 @@ public class Transition implements Comparable<Transition>{
         this.character = character;
         this.statePointer = state;
     }
+
+    /**
+     *
+     */
     @Override
     public int compareTo(Transition o) {
-        return 0;
+        if (o != null && o.statePointer.getNumber() > 0) {
+            if (this.statePointer.getNumber() < o.statePointer.getNumber()) {
+                return -1;
+            }
+
+            if (this.statePointer.getNumber() == o.statePointer.getNumber()) {
+                return 0;
+            }
+        }
+        return 1;
     }
 
     public char getCharacter() {
