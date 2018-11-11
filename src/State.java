@@ -67,7 +67,9 @@ public class State {
     public List<Transition> getOrderedTransitions() {
         List<Transition> adj = new LinkedList<Transition>();
         for (Collection<Transition> transitions : charAdj) {
-            adj.addAll(transitions);
+            if (transitions != null) {
+                adj.addAll(transitions);
+            }
         }
         Collections.sort(adj);
         return adj;

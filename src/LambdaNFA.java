@@ -38,7 +38,18 @@ public class LambdaNFA implements Automaton {
 
     @Override
     public String toString() {
-        return "";
+        StringBuilder output = new StringBuilder();
+        String nextLine = "";
+
+        for (State s : states) {
+            for (Transition t : s.getOrderedTransitions()) {
+                output.append(nextLine);
+                nextLine = "\n";
+                output.append(String.format("(%s, %s) %c", s.getNumber(),
+                        t.getStatePointer().getNumber(), t.getCharacter()));
+            }
+        }
+        return output.toString();
     }
 
     private void initStates() {

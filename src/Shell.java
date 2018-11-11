@@ -12,7 +12,8 @@ public class Shell {
     private static LambdaNFA automat;
     private static  final String[] commands =
             {
-                    "init", "add", "check", "prefix", "generate", "help", "quit"
+                    "init", "add", "check", "prefix", "generate", "help",
+                    "quit", "display"
             };
 
     public static void main(String[] args) throws IOException{
@@ -79,7 +80,7 @@ public class Shell {
 
             case 'g':
                 if (command.equals(commands[4]) || command.length() == 1) {
-
+                    generateNFA();
                 }
                 break;
 
@@ -94,6 +95,11 @@ public class Shell {
                     run = false;
                 }
                 break;
+
+            case 'd':
+                if(command.equals(commands[7]) || command.length() == 1) {
+                    System.out.println(automat.toString());
+                }
 
         }
         sc.close();
@@ -112,10 +118,12 @@ public class Shell {
     private  static void generateNFA() {
         automat = new LambdaNFA(5);
         automat.addTransition(1,2,'a');
-        automat.addTransition(2,3,'a');
-        automat.addTransition(3,4,'a');
-        automat.addTransition(4,5,'a');
+        automat.addTransition(2,3,'b');
+        automat.addTransition(3,4,'j');
+        automat.addTransition(4,5,'g');
         automat.addTransition(2,2,'a');
         automat.addTransition(2,4,'a');
+        automat.addTransition(1,4,'b');
+        automat.addTransition(1,4,'a');
     }
 }
