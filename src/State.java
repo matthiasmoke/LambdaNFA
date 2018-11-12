@@ -85,7 +85,7 @@ public class State {
      * @return index as integer
      */
     private int getTransitionListIndex(char c) {
-        if ((int) c == 126) {
+        if ((int) c == LambdaNFA.LAMBDA) {
             return ALPHABET_NUMBER + 1;
         }
 
