@@ -68,7 +68,9 @@ public class Shell {
 
             case 'c':
                 if (command.equals(commands[2]) || command.length() == 1) {
-
+                    if (sc.hasNext()) {
+                        check(sc.next());
+                    }
                 }
                 break;
 
@@ -105,6 +107,18 @@ public class Shell {
         sc.close();
     }
 
+    private static void check(String word) {
+        if (word.charAt(0) == '"' && word.charAt(word.length() - 1) == '"') {
+            if (automat.isElement(word.substring(1,word.length() - 1))) {
+                System.out.println(word + " is in language");
+            } else {
+                System.out.println(word + " is not in language");
+            }
+        } else {
+            System.out.println("Error! No valid input.");
+        }
+    }
+
     private static void add(int i, int j, char c) {
         if (i > 0 && j > 0 && c > 0) {
             automat.addTransition(i, j, c);
@@ -117,13 +131,9 @@ public class Shell {
 
     private  static void generateNFA() {
         automat = new LambdaNFA(5);
-        automat.addTransition(1,2,'a');
-        automat.addTransition(2,3,'b');
-        automat.addTransition(3,4,'j');
-        automat.addTransition(4,5,'g');
-        automat.addTransition(2,2,'a');
-        automat.addTransition(2,4,'a');
-        automat.addTransition(1,4,'b');
-        automat.addTransition(1,4,'a');
+        automat.addTransition(1,2, 'a');
+        automat.addTransition(2,3, 'b');
+        automat.addTransition(3,4,'c');
+        automat.addTransition(4,5,'d');
     }
 }

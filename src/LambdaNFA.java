@@ -1,8 +1,5 @@
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Queue;
-
 /**
  * Represents an NFA
  */
@@ -15,7 +12,7 @@ public class LambdaNFA implements Automaton {
     /**
      * Collection of end-states
      */
-    private static Collection<State> statesFinal = new ArrayList<>();
+    private Collection<State> statesFinal = new LinkedList<>();
 
 
     /**
@@ -47,26 +44,28 @@ public class LambdaNFA implements Automaton {
     @Override
     public boolean isElement(String word) {
         LinkedList<State> queue = new LinkedList<>();
-        queue.offer(); queue.offer(start);
+        queue.offer(new State());   // empty state as separator char
+        queue.offer(states[START_STATE - 1]);
         int cursor = -1;
+        State currState;
+        char symbol = 0;
 
         while (!queue.isEmpty()) {
-                state = queue.poll();
-                if (state == $) {
-                    ++cursor;
-                    if (cursor < word.length()) {
-                        queue.offer($);
-        // one symbol completely red
-                        symbol = word.charAt(cursor); // move cursor
-                    }
-                } else if (state in F && cursor == word.length()) {
-                    return true; // state in F reached and word completely red -> accept
-                } else if (cursor < word.length()) {
-                    foreach (target reachable from source state via symbol) {
-                        queue.offer(target); queue.offer(next(target));
-                    }
-                } // else no more symbols to read available
-            }
+            currState = queue.poll();
+            if (currState.getNumber() == 0) {
+                ++cursor;
+                if (cursor < word.length()) {
+                    queue.offer(new State());
+                    symbol = word.charAt(cursor); // move cursor
+                }
+            } else if (isInEndStates(currState)&& cursor == word.length()) {
+                return true; // state in F reached and word completely red -> accept
+            } else if (cursor < word.length()) {
+                for (State target : currState.getTargets(symbol)) {
+                    queue.offer(target);
+                }
+            } // else no more symbols to read available
+        }
         return false; // no state in F reached -> reject
     }
 
@@ -80,6 +79,7 @@ public class LambdaNFA implements Automaton {
         StringBuilder output = new StringBuilder();
         String nextLine = "";
 
+        // check transitions for every state in automate
         for (State s : states) {
             for (Transition t : s.getOrderedTransitions()) {
                 output.append(nextLine);
@@ -91,13 +91,30 @@ public class LambdaNFA implements Automaton {
         return output.toString();
     }
 
+    /**
+     * Checks if given state is a final state
+     * @param s state
+     * @return
+     */
+    private boolean isInEndStates(State s) {
+        for (State endSate : statesFinal) {
+            if (s.getNumber() == endSate.getNumber()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Initializes the state array with states and adds the last one
+     * also to the statesFinal list (F)
+     */
     private void initStates() {
         for (int i = 0; i < states.length; i++) {
             if (i == states.length -1) {
                 statesFinal.add(new State(states.length));
-            } else {
-                states[i] = new State(START_STATE + i);
             }
+            states[i] = new State(START_STATE + i);
         }
     }
 }

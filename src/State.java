@@ -11,13 +11,10 @@ public class State {
     private List<Collection<Transition>> charAdj;
 
     /**
-     * Creates an instance of state with given parameters
-     * @param number number of state
-     * @param transition
+     * Creates an empty state that represents the separator-char "$"
      */
-    public State(int number, Transition transition) {
-        this.stateNumber = number;
-        addTransition(transition);
+    public State() {
+        stateNumber = 0;
     }
 
     /**
@@ -54,8 +51,10 @@ public class State {
         int index = getTransitionListIndex(symbol);
         Collection<State> states = new ArrayList<>();
 
-        for(Transition t : charAdj.get(index)) {
-            states.add(t.getStatePointer());
+        if (charAdj.get(index) != null) {
+            for(Transition t : charAdj.get(index)) {
+                states.add(t.getStatePointer());
+            }
         }
         return states;
     }
