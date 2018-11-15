@@ -13,11 +13,14 @@ public class Shell {
     private static  final String[] commands =
             {
                     "init", "add", "check", "prefix", "generate", "help",
-                    "quit", "display"
+                    "display", "quit"
             };
+    private static final String defaultErrorMessage
+            = "Error! No valid input...";
 
     public static void main(String[] args) throws IOException{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader reader
+                = new BufferedReader(new InputStreamReader(System.in));
         runShell(reader);
     }
 
@@ -92,16 +95,19 @@ public class Shell {
                 }
                 break;
 
-            case 'q':
+            case 'd':
                 if (command.equals(commands[6]) || command.length() == 1) {
-                    run = false;
+                    System.out.println(automat.toString());
                 }
                 break;
 
-            case 'd':
+            case 'q':
                 if(command.equals(commands[7]) || command.length() == 1) {
-                    System.out.println(automat.toString());
+                    run = false;
                 }
+
+            default:
+                System.out.println(defaultErrorMessage);
 
         }
         sc.close();
@@ -115,7 +121,7 @@ public class Shell {
                 System.out.println(word + " is not in language");
             }
         } else {
-            System.out.println("Error! No valid input.");
+            System.out.println(defaultErrorMessage);
         }
     }
 
@@ -127,7 +133,21 @@ public class Shell {
     }
 
     private static void printHelpInfo() {
-        System.out.println("Fuck you");
+        StringBuilder b = new StringBuilder();
+        b.append(commands[0] + " n: Initializes a new LambdaNFA with n "
+                + "states\n");
+        b.append(commands[1] + " i j c: Adds a new transition from state "
+                + "i to j with character c\n");
+        b.append(commands[2] + "\"word\": Checks if word is in "
+                + "language of the automate\n");
+        b.append(commands[3] + "\"word\": Gets the longest prefix for word "
+                + "in the automate\n");
+        b.append(commands[4] + ": Generates an example automate\n");
+        b.append(commands[6] + ": Displays the current automate\n");
+        b.append(commands[7] + ": Quits the program\n");
+        b.append("Every command can be executed by using the first letter "
+                + "of the command with the certain parameters");
+        System.out.println(b.toString());
     }
 
     private  static void generateNFA() {
@@ -140,6 +160,5 @@ public class Shell {
         add(3,4,'b');
         add(4,5,'a');
         add(4,1,'~');
-
     }
 }
