@@ -1,5 +1,7 @@
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Represents an NFA
  */
@@ -43,9 +45,9 @@ public class LambdaNFA implements Automaton {
 
     @Override
     public boolean isElement(String word) {
-        LinkedList<State> queue = new LinkedList<>();
+        Queue<State> queue = new LinkedList<>();
         queue.offer(new State());   // empty state as separator char
-        queue.offer(states[START_STATE - 1]);
+        addElementsToQueue(queue, states[START_STATE - 1].getNext());
         int cursor = -1;
         State currState;
         char symbol = 0;
@@ -59,9 +61,11 @@ public class LambdaNFA implements Automaton {
                     symbol = word.charAt(cursor); // move cursor
                 }
             } else if (isInEndStates(currState)&& cursor == word.length()) {
-                return true; // state in F reached and word completely red -> accept
+                return true; // state in F and word completely red -> accept
             } else if (cursor < word.length()) {
                 for (State target : currState.getTargets(symbol)) {
+
+                    addElementsToQueue(queue, target.getNext());
                     queue.offer(target);
                 }
             } // else no more symbols to read available
@@ -91,6 +95,10 @@ public class LambdaNFA implements Automaton {
         return output.toString();
     }
 
+    public State getState(int state) {
+        return states[state - 1];
+    }
+
     /**
      * Checks if given state is a final state
      * @param s state
@@ -115,6 +123,14 @@ public class LambdaNFA implements Automaton {
                 statesFinal.add(new State(states.length));
             }
             states[i] = new State(START_STATE + i);
+        }
+    }
+
+    private void addElementsToQueue(Queue<State> q, Collection<State> c) {
+        if (c != null && c.size() > 0) {
+            for (State state : c) {
+                q.offer(state);
+            }
         }
     }
 }

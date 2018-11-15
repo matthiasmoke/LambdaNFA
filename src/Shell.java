@@ -122,18 +122,24 @@ public class Shell {
     private static void add(int i, int j, char c) {
         if (i > 0 && j > 0 && c > 0) {
             automat.addTransition(i, j, c);
+            automat.getState(i).precomputeNextSet();
         }
     }
 
     private static void printHelpInfo() {
-
+        System.out.println("Fuck you");
     }
 
     private  static void generateNFA() {
         automat = new LambdaNFA(5);
-        automat.addTransition(1,2, 'a');
-        automat.addTransition(2,3, 'b');
-        automat.addTransition(3,4,'c');
-        automat.addTransition(4,5,'d');
+        add(1,2,'~');
+        add(2,2,'~');
+        add(2,3,'a');
+        add(2,4,'~');
+        add(3,4,'~');
+        add(3,4,'b');
+        add(4,5,'a');
+        add(4,1,'~');
+
     }
 }

@@ -9,6 +9,7 @@ public class State {
     private static final int ALPHABET_NUMBER = 26;
 
     private List<Collection<Transition>> charAdj;
+    private LinkedList<State> nextSet;
 
     /**
      * Creates an empty state that represents the separator-char "$"
@@ -33,6 +34,7 @@ public class State {
      */
     public void addTransition(Transition transition) {
         int index = getTransitionListIndex(transition.getCharacter());
+
         Collection<Transition> transitions = charAdj.get(index);
 
         if (transitions == null) {
@@ -74,6 +76,37 @@ public class State {
         return adj;
     }
 
+
+    public void precomputeNextSet() {
+        nextSet = new LinkedList<>();
+
+        Map<State, Boolean> visited = new HashMap<>();
+        Queue<State> bfsQueue = new LinkedList<>();
+        bfsQueue.offer(this);
+        visited.put(this,true);
+
+        while (!bfsQueue.isEmpty()){
+            State currState = bfsQueue.poll();
+            if (currState != this) {
+                nextSet.add(currState);
+            }
+
+            Collection<State> lambdaTargets
+                    = currState.getTargets(LambdaNFA.LAMBDA);
+            for (State lambdaTarget : lambdaTargets) {
+                if (!visited.getOrDefault(lambdaTarget, false)) {
+                    bfsQueue.offer(lambdaTarget);
+                    visited.put(lambdaTarget, true);
+                }
+            }
+        }
+    }
+
+    public LinkedList<State> getNext() {
+        return nextSet;
+    }
+
+
     public int getNumber() {
         return stateNumber;
     }
@@ -85,7 +118,7 @@ public class State {
      */
     private int getTransitionListIndex(char c) {
         if ((int) c == LambdaNFA.LAMBDA) {
-            return ALPHABET_NUMBER + 1;
+            return ALPHABET_NUMBER;
         }
 
         return (int) c - (int) 'a';
