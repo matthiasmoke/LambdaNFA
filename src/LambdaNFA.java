@@ -95,8 +95,8 @@ public class LambdaNFA implements Automaton {
         return output.toString();
     }
 
-    public State getState(int state) {
-        return states[state - 1];
+    public State[] getStates() {
+        return states;
     }
 
     /**

@@ -128,7 +128,7 @@ public class Shell {
     private static void add(int i, int j, char c) {
         if (i > 0 && j > 0 && c > 0) {
             automat.addTransition(i, j, c);
-            automat.getState(i).precomputeNextSet();
+            precomputeNextSets();
         }
     }
 
@@ -150,15 +150,22 @@ public class Shell {
         System.out.println(b.toString());
     }
 
-    private  static void generateNFA() {
+    private static void generateNFA() {
         automat = new LambdaNFA(5);
-        add(1,2,'~');
-        add(2,2,'~');
-        add(2,3,'a');
-        add(2,4,'~');
-        add(3,4,'~');
-        add(3,4,'b');
-        add(4,5,'a');
-        add(4,1,'~');
+        automat.addTransition(1,2,'~');
+        automat.addTransition(2,2,'~');
+        automat.addTransition(2,3,'a');
+        automat.addTransition(2,4,'~');
+        automat.addTransition(3,4,'~');
+        automat.addTransition(3,4,'b');
+        automat.addTransition(4,5,'a');
+        automat.addTransition(4,1,'~');
+        precomputeNextSets();
+    }
+
+    private static void precomputeNextSets() {
+        for (State s : automat.getStates()) {
+            s.precomputeNextSet();
+        }
     }
 }

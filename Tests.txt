@@ -1,0 +1,13 @@
+nfa> g
+nfa> c "aabaaaba"
+"aabaaaba" is in language
+nfa> c "aabaaab"
+"aabaaab" is not in language
+nfa> c "abc"
+"abc" is not in language
+nfa> "aaaaaaaaaaa"
+Error! No valid input...
+nfa> c "aaaaaaaaa"
+"aaaaaaaaa" is in language
+nfa> c "aaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaa"
+"aaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaa" is in language
