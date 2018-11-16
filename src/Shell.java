@@ -79,7 +79,9 @@ public class Shell {
 
             case 'p':
                 if (command.equals(commands[3]) || command.length() == 1) {
-
+                    if (sc.hasNext()) {
+                        longestPrefix(sc.next());
+                    }
                 }
                 break;
 
@@ -125,10 +127,20 @@ public class Shell {
         }
     }
 
+    private static void longestPrefix(String word) {
+        if (word.charAt(0) == '"' && word.charAt(word.length() - 1) == '"') {
+            System.out.println(
+                    automat.longestPrefix(word.substring(1,word.length() - 1)));
+        } else {
+            System.out.println(defaultErrorMessage);
+        }
+    }
+
     private static void add(int i, int j, char c) {
-        if (i > 0 && j > 0 && c > 0) {
+        if (automat.isValidTransition(i, j, c)) {
             automat.addTransition(i, j, c);
-            precomputeNextSets();
+        } else {
+            System.out.println("Error! State can not be added!");
         }
     }
 
@@ -151,7 +163,7 @@ public class Shell {
     }
 
     private static void generateNFA() {
-        automat = new LambdaNFA(5);
+        automat = new LambdaNFA(6);
         automat.addTransition(1,2,'~');
         automat.addTransition(2,2,'~');
         automat.addTransition(2,3,'a');
@@ -160,12 +172,5 @@ public class Shell {
         automat.addTransition(3,4,'b');
         automat.addTransition(4,5,'a');
         automat.addTransition(4,1,'~');
-        precomputeNextSets();
-    }
-
-    private static void precomputeNextSets() {
-        for (State s : automat.getStates()) {
-            s.precomputeNextSet();
-        }
     }
 }

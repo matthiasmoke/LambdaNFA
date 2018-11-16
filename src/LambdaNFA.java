@@ -15,7 +15,7 @@ public class LambdaNFA implements Automaton {
      * Collection of end-states
      */
     private Collection<State> statesFinal = new LinkedList<>();
-
+    private boolean nextSetIsComputed = false;
 
     /**
      * Initializes an NFA
@@ -37,20 +37,23 @@ public class LambdaNFA implements Automaton {
 
     @Override
     public void addTransition(int source, int target, char symbol) {
-        if (isValidTransition(source, target, symbol)) {
             states[source - 1].addTransition(new Transition(symbol,
                     states[target - 1]));
-        }
+
+            //next set has to be computed again
+            nextSetIsComputed = false;
     }
 
     @Override
     public boolean isElement(String word) {
-        Queue<State> queue = new LinkedList<>();
-        queue.offer(new State());   // empty state as separator char
-        addElementsToQueue(queue, states[START_STATE - 1].getNext());
         int cursor = -1;
         State currState;
         char symbol = 0;
+
+        precomputeAllNextSets();
+        Queue<State> queue = new LinkedList<>();
+        queue.offer(new State());   // empty state as separator char
+        addElementsToQueue(queue, states[START_STATE - 1].getNext());
 
         while (!queue.isEmpty()) {
             currState = queue.poll();
@@ -75,7 +78,35 @@ public class LambdaNFA implements Automaton {
 
     @Override
     public String longestPrefix(String word) {
-        return null;
+        int cursor = -1;
+        State currState;
+        char symbol = 0;
+        String longestPrefix = "";
+
+        precomputeAllNextSets();
+        Queue<State> queue = new LinkedList<>();
+        queue.offer(new State());   // empty state as separator char
+        addElementsToQueue(queue, states[START_STATE - 1].getNext());
+
+        while (!queue.isEmpty()) {
+            currState = queue.poll();
+            if (currState.getNumber() == 0) {
+                ++cursor;
+                if (cursor < word.length()) {
+                    queue.offer(new State());
+                    longestPrefix += symbol;
+                    symbol = word.charAt(cursor); // move cursor
+                }
+
+            } else if (cursor < word.length()) {
+                for (State target : currState.getTargets(symbol)) {
+
+                    addElementsToQueue(queue, target.getNext());
+                    queue.offer(target);
+                }
+            } // else no more symbols to read available
+        }
+        return longestPrefix; // no state in F reached -> reject
     }
 
     @Override
@@ -93,10 +124,6 @@ public class LambdaNFA implements Automaton {
             }
         }
         return output.toString();
-    }
-
-    public State[] getStates() {
-        return states;
     }
 
     /**
@@ -131,6 +158,15 @@ public class LambdaNFA implements Automaton {
             for (State state : c) {
                 q.offer(state);
             }
+        }
+    }
+
+    private void precomputeAllNextSets() {
+        if (!nextSetIsComputed) {
+            for (State s : states) {
+                s.precomputeNextSet();
+            }
+            nextSetIsComputed = true;
         }
     }
 }

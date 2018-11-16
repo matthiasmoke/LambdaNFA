@@ -7,7 +7,6 @@ public class State {
 
     private int stateNumber;
     private static final int ALPHABET_NUMBER = 26;
-
     private List<Collection<Transition>> charAdj;
     private LinkedList<State> nextSet;
 

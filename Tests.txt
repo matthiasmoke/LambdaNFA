@@ -11,3 +11,16 @@ nfa> c "aaaaaaaaa"
 "aaaaaaaaa" is in language
 nfa> c "aaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaa"
 "aaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaa" is in language
+
+nfa> g
+nfa> a 5 6 c
+nfa> a 6 7 g
+Error! State can not be added!
+nfa> c "abaaaba"
+"abaaaba" is not in language
+nfa> c "abaaabac"
+"abaaabac" is in language
+
+nfa> g
+nfa> p "abaaab"
+ abaaa
