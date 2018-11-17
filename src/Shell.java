@@ -6,10 +6,10 @@ import java.util.Scanner;
 /**
  * Main class that runs a shell for UI
  */
-public class Shell {
+final class Shell {
 
     private static boolean run;
-    private static LambdaNFA automat;
+    private static LambdaNFA automata;
     private static  final String[] commands =
             {
                     "init", "add", "check", "prefix", "generate", "help",
@@ -37,87 +37,101 @@ public class Shell {
         }
     }
 
+    /**
+     * Evals the input of the user
+     * @param input userinput
+     */
     private static void evalInput(String input) {
 
         Scanner sc = new Scanner(input);
-        String command = sc.next();
-        switch (command.charAt(0)) {
-            case 'i':
-                if (command.equals(commands[0]) || command.length() == 1) {
-                    if (sc.hasNextInt()) {
-                        automat = new LambdaNFA(sc.nextInt());
+
+        if (sc.hasNext()) {
+            String command = sc.next();
+
+            switch (command.charAt(0)) {
+                case 'i':
+                    if (command.equals(commands[0]) || command.length() == 1) {
+                        if (sc.hasNextInt()) {
+                            automata = new LambdaNFA(sc.nextInt());
+                        }
                     }
-                }
-                break;
+                    break;
 
-            case 'a':
-                if (command.equals(commands[1]) || command.length() == 1) {
-                    int j = 0;
-                    int i = 0;
-                    char c = 0;
-                    if (sc.hasNextInt()) {
-                        i = sc.nextInt();
+                case 'a':
+                    if (command.equals(commands[1]) || command.length() == 1) {
+                        int j = 0;
+                        int i = 0;
+                        char c = 0;
+                        if (sc.hasNextInt()) {
+                            i = sc.nextInt();
+                        }
+                        if (sc.hasNextInt()) {
+                            j = sc.nextInt();
+                        }
+                        if (sc.hasNext()) {
+                            c = sc.next().charAt(0);
+                        }
+
+                        add(i,j,c);
                     }
-                    if (sc.hasNextInt()) {
-                        j = sc.nextInt();
+                    break;
+
+                case 'c':
+                    if (command.equals(commands[2]) || command.length() == 1) {
+                        String word = "";
+                        if (sc.hasNext()) {
+                            word = sc.next();
+                        }
+                        check(word);
                     }
-                    if (sc.hasNext()) {
-                        c = sc.next().charAt(0);
+                    break;
+
+                case 'p':
+                    if (command.equals(commands[3]) || command.length() == 1) {
+                        String word = "";
+                        if (sc.hasNext()) {
+                            word = sc.next();
+                        }
+                        longestPrefix(word);
                     }
+                    break;
 
-                    add(i,j,c);
-                }
-                break;
-
-            case 'c':
-                if (command.equals(commands[2]) || command.length() == 1) {
-                    if (sc.hasNext()) {
-                        check(sc.next());
+                case 'g':
+                    if (command.equals(commands[4]) || command.length() == 1) {
+                        generateNFA();
                     }
-                }
-                break;
+                    break;
 
-            case 'p':
-                if (command.equals(commands[3]) || command.length() == 1) {
-                    if (sc.hasNext()) {
-                        longestPrefix(sc.next());
+                case 'h':
+                    if (command.equals(commands[5]) || command.length() == 1) {
+                        printHelpInfo();
                     }
-                }
-                break;
+                    break;
 
-            case 'g':
-                if (command.equals(commands[4]) || command.length() == 1) {
-                    generateNFA();
-                }
-                break;
+                case 'd':
+                    if (command.equals(commands[6]) || command.length() == 1) {
+                        System.out.println(automata.toString());
+                    }
+                    break;
 
-            case 'h':
-                if (command.equals(commands[5]) || command.length() == 1) {
-                    printHelpInfo();
-                }
-                break;
+                case 'q':
+                    if(command.equals(commands[7]) || command.length() == 1) {
+                        run = false;
+                    }
+                    break;
 
-            case 'd':
-                if (command.equals(commands[6]) || command.length() == 1) {
-                    System.out.println(automat.toString());
-                }
-                break;
+                default:
+                    System.out.println(defaultErrorMessage);
 
-            case 'q':
-                if(command.equals(commands[7]) || command.length() == 1) {
-                    run = false;
-                }
-
-            default:
-                System.out.println(defaultErrorMessage);
-
+            }
         }
         sc.close();
     }
 
     private static void check(String word) {
-        if (word.charAt(0) == '"' && word.charAt(word.length() - 1) == '"') {
-            if (automat.isElement(word.substring(1,word.length() - 1))) {
+
+        if (checkWordForSyntax(word)) {
+            if (automata.isElement(word.substring(1,word.length() - 1))) {
                 System.out.println(word + " is in language");
             } else {
                 System.out.println(word + " is not in language");
@@ -128,17 +142,26 @@ public class Shell {
     }
 
     private static void longestPrefix(String word) {
-        if (word.charAt(0) == '"' && word.charAt(word.length() - 1) == '"') {
-            System.out.println(
-                    automat.longestPrefix(word.substring(1,word.length() - 1)));
+
+        if (checkWordForSyntax(word)) {
+
+            //remove quotation marks and get prefix
+            String prefix = automata.longestPrefix(
+                    word.substring(1,word.length() - 1));
+            if (!prefix.equals("")) {
+                System.out.println(prefix);
+            } else {
+                System.out.println("No longest prefix");
+            }
+
         } else {
             System.out.println(defaultErrorMessage);
         }
     }
 
     private static void add(int i, int j, char c) {
-        if (automat.isValidTransition(i, j, c)) {
-            automat.addTransition(i, j, c);
+        if (automata.isValidTransition(i, j, c)) {
+            automata.addTransition(i, j, c);
         } else {
             System.out.println("Error! State can not be added!");
         }
@@ -146,31 +169,47 @@ public class Shell {
 
     private static void printHelpInfo() {
         StringBuilder b = new StringBuilder();
-        b.append(commands[0] + " n: Initializes a new LambdaNFA with n "
-                + "states\n");
-        b.append(commands[1] + " i j c: Adds a new transition from state "
-                + "i to j with character c\n");
-        b.append(commands[2] + "\"word\": Checks if word is in "
-                + "language of the automate\n");
-        b.append(commands[3] + "\"word\": Gets the longest prefix for word "
-                + "in the automate\n");
-        b.append(commands[4] + ": Generates an example automate\n");
-        b.append(commands[6] + ": Displays the current automate\n");
-        b.append(commands[7] + ": Quits the program\n");
-        b.append("Every command can be executed by using the first letter "
-                + "of the command with the certain parameters");
+        b.append(commands[0]);
+        b.append(" n:\t\t\tInitializes a new LambdaNFA with n states\n");
+
+        b.append(commands[1]).append(" i j c:\t\tAdds a new transition ");
+        b.append("from state i to j with character c\n");
+
+        b.append(commands[2]).append(" \"word\":");
+        b.append("\tChecks if word is in language of the automate\n");
+
+        b.append(commands[3]).append("\"word\":\tGets the longest prefix");
+        b.append(" for word in the automate\n");
+
+        b.append(commands[4]).append(":\t\tGenerates an example automate\n");
+        b.append(commands[6]).append(":\t\tDisplays the current automate\n");
+        b.append(commands[7]).append(":\t\t\tQuits the program\n");
+
+        b.append("Every command can be executed by using the first letter ");
+        b.append("of the command with the certain parameters");
         System.out.println(b.toString());
     }
 
     private static void generateNFA() {
-        automat = new LambdaNFA(6);
-        automat.addTransition(1,2,'~');
-        automat.addTransition(2,2,'~');
-        automat.addTransition(2,3,'a');
-        automat.addTransition(2,4,'~');
-        automat.addTransition(3,4,'~');
-        automat.addTransition(3,4,'b');
-        automat.addTransition(4,5,'a');
-        automat.addTransition(4,1,'~');
+        automata = new LambdaNFA(6);
+        automata.addTransition(1,2,'~');
+        automata.addTransition(2,2,'~');
+        automata.addTransition(2,3,'a');
+        automata.addTransition(2,4,'~');
+        automata.addTransition(3,4,'~');
+        automata.addTransition(3,4,'b');
+        automata.addTransition(4,5,'a');
+        automata.addTransition(4,1,'~');
+    }
+
+    /**
+     * Checks if word is not empty and has quotation marks
+     * @param word string to check
+     * @return true if syntax matches
+     */
+    private static boolean checkWordForSyntax(String word) {
+        return (!word.equals("")
+                && word.charAt(0) == '"'
+                && word.charAt(word.length() - 1) == '"');
     }
 }

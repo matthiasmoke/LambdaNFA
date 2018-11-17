@@ -24,3 +24,14 @@ nfa> c "abaaabac"
 nfa> g
 nfa> p "abaaab"
  abaaa
+
+nfa> help
+init n:			Initializes a new LambdaNFA with n states
+add i j c:		Adds a new transition from state i to j with character c
+check "word":	Checks if word is in language of the automate
+prefix"word":	Gets the longest prefix for word in the automate
+generate:		Generates an example automate
+display:		Displays the current automate
+quit:			Quits the program
+Every command can be executed by using the first letter of the command with the certain parameters
+

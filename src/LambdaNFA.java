@@ -49,9 +49,9 @@ public class LambdaNFA implements Automaton {
         int cursor = -1;
         State currState;
         char symbol = 0;
-
-        precomputeAllNextSets();
         Queue<State> queue = new LinkedList<>();
+
+        computeAllNextSets();
         queue.offer(new State());   // empty state as separator char
         addElementsToQueue(queue, states[START_STATE - 1].getNext());
 
@@ -82,9 +82,9 @@ public class LambdaNFA implements Automaton {
         State currState;
         char symbol = 0;
         String longestPrefix = "";
-
-        precomputeAllNextSets();
         Queue<State> queue = new LinkedList<>();
+
+        computeAllNextSets();
         queue.offer(new State());   // empty state as separator char
         addElementsToQueue(queue, states[START_STATE - 1].getNext());
 
@@ -94,7 +94,7 @@ public class LambdaNFA implements Automaton {
                 ++cursor;
                 if (cursor < word.length()) {
                     queue.offer(new State());
-                    longestPrefix += symbol;
+                    longestPrefix += symbol;      // add symbol to longestPrefix
                     symbol = word.charAt(cursor); // move cursor
                 }
 
@@ -161,7 +161,7 @@ public class LambdaNFA implements Automaton {
         }
     }
 
-    private void precomputeAllNextSets() {
+    private void computeAllNextSets() {
         if (!nextSetIsComputed) {
             for (State s : states) {
                 s.precomputeNextSet();
