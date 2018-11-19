@@ -53,6 +53,7 @@ public class LambdaNFA implements Automaton {
 
         computeAllNextSets();
         queue.offer(new State());   // empty state as separator char
+        queue.offer(states[START_STATE - 1]);
         addElementsToQueue(queue, states[START_STATE - 1].getNext());
 
         while (!queue.isEmpty()) {

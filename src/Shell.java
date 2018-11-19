@@ -53,6 +53,8 @@ final class Shell {
                     if (command.equals(commands[0]) || command.length() == 1) {
                         if (sc.hasNextInt()) {
                             automata = new LambdaNFA(sc.nextInt());
+                        } else {
+                            System.out.println(defaultErrorMessage);
                         }
                     }
                     break;
@@ -110,7 +112,9 @@ final class Shell {
 
                 case 'd':
                     if (command.equals(commands[6]) || command.length() == 1) {
-                        System.out.println(automata.toString());
+                        if (checkLambdaNFA()) {
+                            System.out.println(automata.toString());
+                        }
                     }
                     break;
 
@@ -130,40 +134,46 @@ final class Shell {
 
     private static void check(String word) {
 
-        if (checkWordForSyntax(word)) {
-            if (automata.isElement(word.substring(1,word.length() - 1))) {
-                System.out.println(word + " is in language");
+        if (checkLambdaNFA()) {
+            if (checkWordForSyntax(word)) {
+                if (automata.isElement(word.substring(1,word.length() - 1))) {
+                    System.out.println(word + " is in language");
+                } else {
+                    System.out.println(word + " is not in language");
+                }
             } else {
-                System.out.println(word + " is not in language");
+                System.out.println(defaultErrorMessage);
             }
-        } else {
-            System.out.println(defaultErrorMessage);
         }
     }
 
     private static void longestPrefix(String word) {
 
-        if (checkWordForSyntax(word)) {
+        if (checkLambdaNFA()) {
+            if (checkWordForSyntax(word)) {
 
-            //remove quotation marks and get prefix
-            String prefix = automata.longestPrefix(
-                    word.substring(1,word.length() - 1));
-            if (!prefix.equals("")) {
-                System.out.println(prefix);
+                //remove quotation marks and get prefix
+                String prefix = automata.longestPrefix(
+                        word.substring(1,word.length() - 1));
+                if (!prefix.equals("")) {
+                    System.out.println(prefix);
+                } else {
+                    System.out.println("No longest prefix");
+                }
+
             } else {
-                System.out.println("No longest prefix");
+                System.out.println(defaultErrorMessage);
             }
-
-        } else {
-            System.out.println(defaultErrorMessage);
         }
     }
 
     private static void add(int i, int j, char c) {
-        if (automata.isValidTransition(i, j, c)) {
-            automata.addTransition(i, j, c);
-        } else {
-            System.out.println("Error! State can not be added!");
+        if (checkLambdaNFA()) {
+            if (automata.isValidTransition(i, j, c)) {
+                automata.addTransition(i, j, c);
+            } else {
+                System.out.println("Error! State can not be added!");
+            }
         }
     }
 
@@ -191,7 +201,7 @@ final class Shell {
     }
 
     private static void generateNFA() {
-        automata = new LambdaNFA(6);
+        automata = new LambdaNFA(5);
         automata.addTransition(1,2,'~');
         automata.addTransition(2,2,'~');
         automata.addTransition(2,3,'a');
@@ -211,5 +221,14 @@ final class Shell {
         return (!word.equals("")
                 && word.charAt(0) == '"'
                 && word.charAt(word.length() - 1) == '"');
+    }
+
+    private static boolean checkLambdaNFA() {
+        if (automata != null) {
+            return true;
+        } else {
+            System.out.println("Error! LambdaNFA is not initialized.");
+            return false;
+        }
     }
 }

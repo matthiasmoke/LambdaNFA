@@ -76,8 +76,7 @@ public class State {
     }
 
 
-    public void precomputeNextSet() {
-        nextSet = new LinkedList<>();
+    public void precomputeNextSet() { nextSet = new LinkedList<>();
 
         Map<State, Boolean> visited = new HashMap<>();
         Queue<State> bfsQueue = new LinkedList<>();
