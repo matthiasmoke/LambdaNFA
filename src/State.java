@@ -75,7 +75,9 @@ public class State {
         return adj;
     }
 
-
+    /**
+     * Computes the next-set for the state
+     */
     public void precomputeNextSet() { nextSet = new LinkedList<>();
 
         Map<State, Boolean> visited = new HashMap<>();
@@ -104,9 +106,25 @@ public class State {
         return nextSet;
     }
 
-
+    /**
+     * Gets the number of the state
+     * @return int that is the state's number
+     */
     public int getNumber() {
         return stateNumber;
+    }
+
+    /**
+     * Checks if the state has transitions to other states
+     * @return true if it has transitions, false if not
+     */
+    public boolean hasTransitions() {
+        for (Collection<Transition> transitionCollection : charAdj) {
+            if (transitionCollection != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -122,6 +140,9 @@ public class State {
         return (int) c - (int) 'a';
     }
 
+    /**
+     * Initializes the transition-list by setting each collection to null
+     */
     private void initTransitionList() {
         for (int i = 0; i < ALPHABET_NUMBER + 1; i++) {
             charAdj.add(i, null);

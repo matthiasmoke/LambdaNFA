@@ -9,7 +9,7 @@ import java.util.Scanner;
 final class Shell {
 
     private static boolean run;
-    private static LambdaNFA automata;
+    private static LambdaNFA automate;
     private static  final String[] commands =
             {
                     "init", "add", "check", "prefix", "generate", "help",
@@ -18,12 +18,22 @@ final class Shell {
     private static final String defaultErrorMessage
             = "Error! No valid input...";
 
+    /**
+     * Main method that starts the shell
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException{
         BufferedReader reader
                 = new BufferedReader(new InputStreamReader(System.in));
         runShell(reader);
     }
 
+    /**
+     * Runs the shell-loop
+     * @param reader for user-input
+     * @throws IOException can occur
+     */
     private static void runShell(BufferedReader reader) throws IOException {
         run = true;
 
@@ -52,7 +62,7 @@ final class Shell {
                 case 'i':
                     if (command.equals(commands[0]) || command.length() == 1) {
                         if (sc.hasNextInt()) {
-                            automata = new LambdaNFA(sc.nextInt());
+                            automate = new LambdaNFA(sc.nextInt());
                         } else {
                             System.out.println(defaultErrorMessage);
                         }
@@ -113,7 +123,7 @@ final class Shell {
                 case 'd':
                     if (command.equals(commands[6]) || command.length() == 1) {
                         if (checkLambdaNFA()) {
-                            System.out.println(automata.toString());
+                            System.out.println(automate.toString());
                         }
                     }
                     break;
@@ -132,11 +142,14 @@ final class Shell {
         sc.close();
     }
 
+    /**
+     * Lets the NFA check if word is in its language and prints the result
+     * @param word to check
+     */
     private static void check(String word) {
-
         if (checkLambdaNFA()) {
             if (checkWordForSyntax(word)) {
-                if (automata.isElement(word.substring(1,word.length() - 1))) {
+                if (automate.isElement(word.substring(1,word.length() - 1))) {
                     System.out.println(word + " is in language");
                 } else {
                     System.out.println(word + " is not in language");
@@ -147,13 +160,16 @@ final class Shell {
         }
     }
 
+    /**
+     * Prints the longest prefix returned by the NFA
+     * @param word to check
+     */
     private static void longestPrefix(String word) {
-
         if (checkLambdaNFA()) {
             if (checkWordForSyntax(word)) {
 
                 //remove quotation marks and get prefix
-                String prefix = automata.longestPrefix(
+                String prefix = automate.longestPrefix(
                         word.substring(1,word.length() - 1));
                 if (!prefix.equals("")) {
                     System.out.println(prefix);
@@ -167,16 +183,25 @@ final class Shell {
         }
     }
 
+    /**
+     * Adds a transition between two states of to the automate
+     * @param i source
+     * @param j target
+     * @param c char value
+     */
     private static void add(int i, int j, char c) {
         if (checkLambdaNFA()) {
-            if (automata.isValidTransition(i, j, c)) {
-                automata.addTransition(i, j, c);
+            if (automate.isValidTransition(i, j, c)) {
+                automate.addTransition(i, j, c);
             } else {
                 System.out.println("Error! State can not be added!");
             }
         }
     }
 
+    /**
+     * Prints help-info for the user
+     */
     private static void printHelpInfo() {
         StringBuilder b = new StringBuilder();
         b.append(commands[0]);
@@ -200,16 +225,19 @@ final class Shell {
         System.out.println(b.toString());
     }
 
+    /**
+     * Generates an LambdaNFA for testing purposes
+     */
     private static void generateNFA() {
-        automata = new LambdaNFA(5);
-        automata.addTransition(1,2,'~');
-        automata.addTransition(2,2,'~');
-        automata.addTransition(2,3,'a');
-        automata.addTransition(2,4,'~');
-        automata.addTransition(3,4,'~');
-        automata.addTransition(3,4,'b');
-        automata.addTransition(4,5,'a');
-        automata.addTransition(4,1,'~');
+        automate = new LambdaNFA(5);
+        automate.addTransition(1,2,'~');
+        automate.addTransition(2,2,'~');
+        automate.addTransition(2,3,'a');
+        automate.addTransition(2,4,'~');
+        automate.addTransition(3,4,'~');
+        automate.addTransition(3,4,'b');
+        automate.addTransition(4,5,'a');
+        automate.addTransition(4,1,'~');
     }
 
     /**
@@ -223,8 +251,12 @@ final class Shell {
                 && word.charAt(word.length() - 1) == '"');
     }
 
+    /**
+     * Checks if NFA is initialized
+     * @return true if its initialized, false if null
+     */
     private static boolean checkLambdaNFA() {
-        if (automata != null) {
+        if (automate != null) {
             return true;
         } else {
             System.out.println("Error! LambdaNFA is not initialized.");

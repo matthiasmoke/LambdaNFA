@@ -7,7 +7,9 @@ public class Transition implements Comparable<Transition>{
     private char character;
 
     /**
-     *
+     * Creates an instance of Transition
+     * @param character that the transition holds
+     * @param state that the transition points to
      */
     public Transition(char character, State state) {
         this.character = character;
@@ -31,10 +33,18 @@ public class Transition implements Comparable<Transition>{
         return 1;
     }
 
+    /**
+     * Gets the character of the transition
+     * @return char
+     */
     public char getCharacter() {
         return this.character;
     }
 
+    /**
+     * Gets the state on that the transition points
+     * @return state
+     */
     public State getStatePointer() {
         return statePointer;
     }
