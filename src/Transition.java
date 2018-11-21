@@ -18,6 +18,9 @@ public class Transition implements Comparable<Transition>{
 
     /**
      * Compares two transition objects
+     * @return {@code < 0} if {@code this < other},
+     *         {@code = 0} if equal, and
+     *         {@code > 0} if {@code this > other}.
      */
     @Override
     public int compareTo(Transition o) {

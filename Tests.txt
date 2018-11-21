@@ -1,3 +1,6 @@
+Testing of:
+
+-> Check command
 nfa> g
 nfa> c "aabaaaba"
 "aabaaaba" is in language
@@ -11,7 +14,6 @@ nfa> c "aaaaaaaaa"
 "aaaaaaaaa" is in language
 nfa> c "aaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaa"
 "aaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaa" is in language
-
 nfa> g
 nfa> a 5 6 c
 nfa> a 6 7 g
@@ -21,10 +23,7 @@ nfa> c "abaaaba"
 nfa> c "abaaabac"
 "abaaabac" is in language
 
-nfa> g
-nfa> p "abaaab"
- abaaa
-
+-> Help command
 nfa> help
 init n:			Initializes a new LambdaNFA with n states
 add i j c:		Adds a new transition from state i to j with character c
@@ -35,6 +34,7 @@ display:		Displays the current automate
 quit:			Quits the program
 Every command can be executed by using the first letter of the command with the certain parameters
 
+-> no NFA size and special char handling
 nfa> init
 Error! No valid input...
 nfa> init 5
@@ -42,7 +42,7 @@ nfa> add 1 4 ~
 nfa> add 1 3 ?
 Error! State can not be added!
 
-Tested state with multiple end states
+-> state with multiple end states
 nfa> init 3
 nfa> a 1 2 c
 nfa> a 1 3 a
@@ -69,6 +69,29 @@ nfa> c "aah"
 nfa> a 5 4 h
 nfa> c "aah"
 "aah" is in language
+
+-> Prefix command
+nfa> g
+nfa> c "a"
+"a" is in language
+nfa> c "abaaabbbbb"
+"abaaabbbbb" is not in language
+nfa> p "abaaabbbb"
+ abaaa
+nfa> p "ghdfg"
+No longest prefix
+nfa> p ""
+No longest prefix
+nfa> d
+(1, 2) ~
+(2, 2) ~
+(2, 3) a
+(2, 4) ~
+(3, 4) b
+(3, 4) ~
+(4, 1) ~
+(4, 5) a
+
 
 
 

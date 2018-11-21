@@ -1,5 +1,6 @@
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -89,6 +90,7 @@ public class LambdaNFA implements Automaton {
         int cursor = -1;
         State currState;
         char symbol = 0;
+        String currString = "";
         String longestPrefix = "";
         Queue<State> queue = new LinkedList<>();
 
@@ -105,11 +107,11 @@ public class LambdaNFA implements Automaton {
                 ++cursor;
                 if (cursor < word.length()) {
                     queue.offer(new State());
-                    longestPrefix += symbol;      // add symbol to longestPrefix
+                    currString += symbol;      // add symbol to current string
                     symbol = word.charAt(cursor); // move cursor
-                } else if (isInEndStates(currState)) {
-                    return longestPrefix;
                 }
+            } else if (isInEndStates(currState)) {
+                longestPrefix = currString;
             } else if (cursor < word.length()) {
                 for (State target : currState.getTargets(symbol)) {
 
@@ -118,7 +120,7 @@ public class LambdaNFA implements Automaton {
                 }
             } // else no more symbols to read available
         }
-        return ""; // no state in F reached -> reject
+        return longestPrefix;
     }
 
     @Override
@@ -128,7 +130,8 @@ public class LambdaNFA implements Automaton {
 
         // check transitions for every state in automate
         for (State s : states) {
-            for (Transition t : s.getOrderedTransitions()) {
+            List<Transition> list = s.getOrderedTransitions();
+            for (Transition t : list) {
                 output.append(nextLine);
                 nextLine = "\n";
                 output.append(String.format("(%s, %s) %c", s.getNumber(),
