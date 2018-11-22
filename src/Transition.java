@@ -1,7 +1,7 @@
 /**
  * Represents a transition between to states of an NFA
  */
-public class Transition implements Comparable<Transition>{
+public class Transition implements Comparable<Transition> {
 
     private State statePointer;
     private char character;

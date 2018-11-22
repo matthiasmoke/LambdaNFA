@@ -1,4 +1,11 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * Represents an NFA state/node
@@ -8,7 +15,7 @@ public class State {
     private int stateNumber;
     private static final int ALPHABET_NUMBER = 26;
     private List<Collection<Transition>> charAdj;
-    private LinkedList<State> nextSet;
+    private List<State> nextSet;
 
     /**
      * Creates an empty state that represents the separator-char "$"
@@ -53,7 +60,7 @@ public class State {
         Collection<State> states = new ArrayList<>();
 
         if (charAdj.get(index) != null) {
-            for(Transition t : charAdj.get(index)) {
+            for (Transition t : charAdj.get(index)) {
                 states.add(t.getStatePointer());
             }
         }
@@ -78,14 +85,15 @@ public class State {
     /**
      * Computes the next-set for the state
      */
-    public void precomputeNextSet() { nextSet = new LinkedList<>();
-
+    public void precomputeNextSet() {
+        nextSet = new LinkedList<>();
         Map<State, Boolean> visited = new HashMap<>();
         Queue<State> bfsQueue = new LinkedList<>();
-        bfsQueue.offer(this);
-        visited.put(this,true);
 
-        while (!bfsQueue.isEmpty()){
+        bfsQueue.offer(this);
+        visited.put(this, true);
+
+        while (!bfsQueue.isEmpty()) {
             State currState = bfsQueue.poll();
             if (currState != this) {
                 nextSet.add(currState);
@@ -102,7 +110,11 @@ public class State {
         }
     }
 
-    public LinkedList<State> getNext() {
+    /**
+     * Gets set of trough ’~’ reachable states of this sate
+     * @return next-set or null if there are no next sets
+     */
+    public List<State> getNext() {
         return nextSet;
     }
 

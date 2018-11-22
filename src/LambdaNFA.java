@@ -1,6 +1,5 @@
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -62,7 +61,7 @@ public class LambdaNFA implements Automaton {
 
         queue.offer(new State());   // empty state as separator char
         queue.offer(states[START_STATE - 1]);
-        addElementsToQueue(queue, states[START_STATE - 1].getNext());
+        queue.addAll(states[START_STATE - 1].getNext());
 
         while (!queue.isEmpty()) {
             currState = queue.poll();
@@ -72,12 +71,12 @@ public class LambdaNFA implements Automaton {
                     queue.offer(new State());
                     symbol = word.charAt(cursor); // move cursor
                 }
-            } else if (isInEndStates(currState)&& cursor == word.length()) {
+            } else if (isInEndStates(currState) && cursor == word.length()) {
                 return true; // state in F and word completely red -> accept
             } else if (cursor < word.length()) {
                 for (State target : currState.getTargets(symbol)) {
 
-                    addElementsToQueue(queue, target.getNext());
+                    queue.addAll(target.getNext());
                     queue.offer(target);
                 }
             } // else no more symbols to read available
@@ -99,7 +98,7 @@ public class LambdaNFA implements Automaton {
         computeAllNextSets();
 
         queue.offer(new State());   // empty state as separator char
-        addElementsToQueue(queue, states[START_STATE - 1].getNext());
+        queue.addAll(states[START_STATE - 1].getNext());
 
         while (!queue.isEmpty()) {
             currState = queue.poll();
@@ -111,11 +110,11 @@ public class LambdaNFA implements Automaton {
                     symbol = word.charAt(cursor); // move cursor
                 }
             } else if (isInEndStates(currState)) {
-                longestPrefix = currString;
+                longestPrefix = currString; // save string thats in language
             } else if (cursor < word.length()) {
                 for (State target : currState.getTargets(symbol)) {
 
-                    addElementsToQueue(queue, target.getNext());
+                    queue.addAll(target.getNext());
                     queue.offer(target);
                 }
             } // else no more symbols to read available
@@ -130,8 +129,7 @@ public class LambdaNFA implements Automaton {
 
         // check transitions for every state in automate
         for (State s : states) {
-            List<Transition> list = s.getOrderedTransitions();
-            for (Transition t : list) {
+            for (Transition t : s.getOrderedTransitions()) {
                 output.append(nextLine);
                 nextLine = "\n";
                 output.append(String.format("(%s, %s) %c", s.getNumber(),
@@ -176,19 +174,6 @@ public class LambdaNFA implements Automaton {
                 }
             }
             endStatesChecked = true;
-        }
-    }
-
-    /**
-     * Adds the states from the collection to the queue
-     * @param q queue to add states to
-     * @param c collection with states
-     */
-    private void addElementsToQueue(Queue<State> q, Collection<State> c) {
-        if (c != null && c.size() > 0) {
-            for (State state : c) {
-                q.offer(state);
-            }
         }
     }
 

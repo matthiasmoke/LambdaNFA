@@ -32,7 +32,8 @@ prefix"word":	Gets the longest prefix for word in the automate
 generate:		Generates an example automate
 display:		Displays the current automate
 quit:			Quits the program
-Every command can be executed by using the first letter of the command with the certain parameters
+Every command can be executed by using the first letter
+of the command with the certain parameters
 
 -> no NFA size and special char handling
 nfa> init
