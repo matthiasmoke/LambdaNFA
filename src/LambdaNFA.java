@@ -98,6 +98,7 @@ public class LambdaNFA implements Automaton {
         computeAllNextSets();
 
         queue.offer(new State());   // empty state as separator char
+        queue.offer(states[START_STATE - 1]);
         queue.addAll(states[START_STATE - 1].getNext());
 
         while (!queue.isEmpty()) {
@@ -110,7 +111,13 @@ public class LambdaNFA implements Automaton {
                     symbol = word.charAt(cursor); // move cursor
                 }
             } else if (isInEndStates(currState)) {
-                longestPrefix = currString; // save string thats in language
+
+                // save string thats in language
+                if (word.length() == cursor) {
+                    longestPrefix = word;
+                } else {
+                    longestPrefix = currString;
+                }
             } else if (cursor < word.length()) {
                 for (State target : currState.getTargets(symbol)) {
 
