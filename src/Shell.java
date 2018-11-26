@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
  public final class Shell {
 
-     private Shell() {
+    private Shell() {
 
     }
 
@@ -19,8 +19,15 @@ import java.util.Scanner;
                     "init", "add", "check", "prefix", "generate", "help",
                     "display", "quit"
             };
+    private static final String ERROR_STATE_NOT_ADDED
+            = "Error! State can not be added!";
     private static final String DEFAULT_ERROR_MESSAGE
             = "Error! No valid input...";
+    private static final String ERROR_NO_NFA
+            = "Error! LambdaNFA is not initialized.";
+    private static final String MSG_IN_LANGUAGE = "In language.";
+    private static final String MSG_NOT_IN_LANGUAGE = "Not in language.";
+    private static final String MSG_NO_PREFIX = "No prefix in language.";
 
     /**
      * Main method that starts the shell
@@ -162,9 +169,9 @@ import java.util.Scanner;
         if (checkLambdaNFA()) {
             if (checkWordForSyntax(word)) {
                 if (automate.isElement(word.substring(1, word.length() - 1))) {
-                    System.out.println("In language.");
+                    System.out.println(MSG_IN_LANGUAGE);
                 } else {
-                    System.out.println("Not in language.");
+                    System.out.println(MSG_NOT_IN_LANGUAGE);
                 }
             } else {
                 System.out.println(DEFAULT_ERROR_MESSAGE);
@@ -186,7 +193,7 @@ import java.util.Scanner;
                 if (!prefix.equals("")) {
                     System.out.println("\"" + prefix + "\"");
                 } else {
-                    System.out.println("No prefix in language.");
+                    System.out.println(MSG_NO_PREFIX);
                 }
 
             } else {
@@ -206,7 +213,7 @@ import java.util.Scanner;
             if (automate.isValidTransition(i, j, c)) {
                 automate.addTransition(i, j, c);
             } else {
-                System.out.println("Error! State can not be added!");
+                System.out.println(ERROR_STATE_NOT_ADDED);
             }
         }
     }
@@ -254,6 +261,19 @@ import java.util.Scanner;
     }
 
     /**
+     * Checks if NFA is initialized
+     * @return true if its initialized, false if null
+     */
+    private static boolean checkLambdaNFA() {
+        if (automate != null) {
+            return true;
+        } else {
+            System.out.println(ERROR_NO_NFA);
+            return false;
+        }
+    }
+
+    /**
      * Checks if word is not empty and has quotation marks
      * @param word string to check
      * @return true if syntax matches
@@ -262,18 +282,5 @@ import java.util.Scanner;
         return (!word.equals("")
                 && word.charAt(0) == '"'
                 && word.charAt(word.length() - 1) == '"');
-    }
-
-    /**
-     * Checks if NFA is initialized
-     * @return true if its initialized, false if null
-     */
-    private static boolean checkLambdaNFA() {
-        if (automate != null) {
-            return true;
-        } else {
-            System.out.println("Error! LambdaNFA is not initialized.");
-            return false;
-        }
     }
 }

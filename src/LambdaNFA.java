@@ -149,7 +149,7 @@ public class LambdaNFA implements Automaton {
     /**
      * Checks if given state is a final state
      * @param s state
-     * @return
+     * @return true if s is in end-states
      */
     private boolean isInEndStates(State s) {
         for (State endSate : statesFinal) {
